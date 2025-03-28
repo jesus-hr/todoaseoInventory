@@ -1,0 +1,85 @@
+/* Estilos generales */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  padding: 20px;
+}
+
+/* Caja del login */
+.login-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-box:hover {
+  transform: scale(1.02);
+}
+
+/* Título */
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.3s ease-in-out;
+  box-sizing: border-box; /* Asegura que padding y border no agranden el input */
+}
+
+.login-box input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Botón */
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.login-box button:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 20px;
+  }
+  
+  .login-box h2 {
+    font-size: 20px;
+  }
+  
+  .login-box button {
+    font-size: 16px;
+  }
+}
