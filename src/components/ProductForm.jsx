@@ -40,7 +40,7 @@ const ProductForm = () => {
           onChange={(e) => setNombre(e.target.value)}
           required
         />
-
+        <br></br>
         <label>Cantidad:</label>
         <input
           type="number"

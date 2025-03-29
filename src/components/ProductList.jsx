@@ -49,7 +49,7 @@ const ProductList = () => {
     setEditingProduct(null);
   };
 
-  return (
+  return (   
     <div className="product-list">
       <h2>Lista de Productos</h2>
       {products.length === 0 ? (
