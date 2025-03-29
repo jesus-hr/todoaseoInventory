@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../firebaseConfig";
 
 const ProductForm = () => {
   const [nombre, setNombre] = useState("");

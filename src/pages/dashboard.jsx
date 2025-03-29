@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, signOut, onAuthStateChanged } from "../../firebaseConfig";
+import { auth, signOut, onAuthStateChanged } from "../firebaseConfig";
 import ProductList from "../components/ProductList";
 import ProductForm from "../components/ProductForm";
 import "../styles/dashboard.css";
