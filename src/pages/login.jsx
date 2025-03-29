@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, signInWithEmailAndPassword } from "../../firebaseConfig";
+import { auth, signInWithEmailAndPassword, onAuthStateChanged } from "../../firebaseConfig";
 import "../styles/login.css";
 
 const Login = () => {
@@ -10,9 +10,13 @@ const Login = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (auth.currentUser) {
-      navigate("/dashboard");
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/dashboard");
+      }
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleLogin = async (e) => {

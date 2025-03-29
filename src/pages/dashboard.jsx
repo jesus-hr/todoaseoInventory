@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, signOut } from "../../firebaseConfig";
+import { auth, signOut, onAuthStateChanged } from "../../firebaseConfig";
 import ProductList from "../components/ProductList";
 import ProductForm from "../components/ProductForm";
 import "../styles/dashboard.css";
@@ -7,11 +8,19 @@ import "../styles/dashboard.css";
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      localStorage.removeItem("auth");
-      navigate("/");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/");
+      }
     });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/");
   };
 
   return (
