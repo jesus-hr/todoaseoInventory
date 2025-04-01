@@ -23,8 +23,18 @@ const ProductList = () => {
 
   // Eliminar producto
   const handleDelete = async (id) => {
-    await deleteDoc(doc(db, "Productos", id));
-    setProducts(products.filter(product => product.id !== id));
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
+
+    if (confirmDelete) {
+      try {
+        await deleteDoc(doc(db, "Productos", id));
+        setProducts(products.filter(product => product.id !== id));
+        alert("Producto eliminado correctamente");
+      } catch (error) {
+        console.error("Error al eliminar el producto:", error);
+        alert("Hubo un error al eliminar el producto");
+      }
+    }
   };
 
   // Activar modo edición
@@ -49,7 +59,7 @@ const ProductList = () => {
     setEditingProduct(null);
   };
 
-  return (   
+  return (
     <div className="product-list">
       <h2>Lista de Productos</h2>
       {products.length === 0 ? (
