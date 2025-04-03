@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { registrarMovimiento } from "../movimientos"; // Importamos la función
-
+import "../styles/productlist.css";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedQuantity, setEditedQuantity] = useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterQuantity, setFilterQuantity] = useState("");
+  const [sortBy, setSortBy] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -66,14 +70,51 @@ const ProductList = () => {
     setEditingProduct(null);
   };
 
+  // Filtrar productos
+  const filteredProducts = products
+    .filter((product) => 
+      product.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((product) => {
+      if (!filterQuantity) return true;
+      return product.Cantidad < parseInt(filterQuantity);
+    })
+    .sort((a, b) => {
+      if (sortBy === "name") return a.Nombre.localeCompare(b.Nombre);
+      if (sortBy === "quantity") return a.Cantidad - b.Cantidad;
+      return 0;
+    });
+
   return (
     <div className="product-list">
       <h2>Lista de Productos</h2>
-      {products.length === 0 ? (
-        <p>No hay productos aún...</p>
+
+      {/* Búsqueda y Filtros */}
+      <div className="filters">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select onChange={(e) => setFilterQuantity(e.target.value)}>
+          <option value="">Todos</option>
+          <option value="5">Menos de 5 unidades</option>
+          <option value="10">Menos de 10 unidades</option>
+        </select>
+        <select onChange={(e) => setSortBy(e.target.value)}>
+          <option value="">Ordenar</option>
+          <option value="name">Nombre A-Z</option>
+          <option value="quantity">Cantidad</option>
+        </select>
+      </div>
+
+      {/* Lista de productos */}
+      {filteredProducts.length === 0 ? (
+        <p>No hay productos que coincidan...</p>
       ) : (
         <ul>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <li key={product.id}>
               {editingProduct === product.id ? (
                 <>
