@@ -3,6 +3,7 @@ import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
 function App() {
   return (    
     <Routes>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { registrarMovimiento } from "../movimientos"; // Importamos la función
 
 const ProductForm = () => {
   const [nombre, setNombre] = useState("");
@@ -15,10 +16,11 @@ const ProductForm = () => {
     }
 
     try {
-      await addDoc(collection(db, "Productos"), {
-        Nombre: nombre,
-        Cantidad: parseInt(cantidad, 10), // Convertir a número
-      });
+      const nuevoProducto = { Nombre: nombre, Cantidad: parseInt(cantidad, 10) };
+      await addDoc(collection(db, "Productos"), nuevoProducto);
+
+      // Registrar en historial
+      await registrarMovimiento("Agregar", nuevoProducto);
 
       setNombre("");
       setCantidad("");

@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, signOut, onAuthStateChanged } from "../firebaseConfig";
 import ProductList from "../components/ProductList";
 import ProductForm from "../components/ProductForm";
+/*import HistorialMovimientos from "../components/HistorialMovimientos";*/
+import HistorialModal from "../components/HistorialModal"; // Importamos el nuevo componente
 import "../styles/dashboard.css";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const [mostrarHistorial, setMostrarHistorial] = useState(false);
+  const navigate = useNavigate();  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -38,6 +42,18 @@ const Dashboard = () => {
 
         {/* Lista de productos */}
         <ProductList />
+
+        {/* 🔹 Botón para abrir el historial */}
+        <button 
+          className="btn-historial" 
+          onClick={() => setMostrarHistorial(true)}
+        >
+          📊 Historial de Movimientos
+        </button>
+        
+        {/* Modal del historial */}
+        {mostrarHistorial && <HistorialModal onClose={() => setMostrarHistorial(false)} />}
+        {/*<HistorialMovimientos />*/}
       </main>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { registrarMovimiento } from "../movimientos"; // Importamos la función
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -22,18 +23,21 @@ const ProductList = () => {
   }, []);
 
   // Eliminar producto
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este producto?");
+  const handleDelete = async (id, nombre) => {
+    const confirmDelete = window.confirm(`¿Seguro que deseas eliminar ${nombre}?`);
+    if (!confirmDelete) return;
 
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(db, "Productos", id));
-        setProducts(products.filter(product => product.id !== id));
-        alert("Producto eliminado correctamente");
-      } catch (error) {
-        console.error("Error al eliminar el producto:", error);
-        alert("Hubo un error al eliminar el producto");
-      }
+    try {
+      await deleteDoc(doc(db, "Productos", id));
+      setProducts(products.filter(product => product.id !== id));
+
+      // Registrar en historial
+      await registrarMovimiento("Eliminar", { id, Nombre: nombre });
+
+      alert("Producto eliminado correctamente");
+    } catch (error) {
+      console.error("Error al eliminar el producto:", error);
+      alert("Hubo un error al eliminar el producto");
     }
   };
 
@@ -55,6 +59,9 @@ const ProductList = () => {
     setProducts(products.map(prod =>
       prod.id === id ? { ...prod, Nombre: editedName, Cantidad: editedQuantity } : prod
     ));
+
+    // Registrar en historial
+    await registrarMovimiento("Editar", { id, Nombre: editedName, Cantidad: editedQuantity });
 
     setEditingProduct(null);
   };
@@ -86,7 +93,7 @@ const ProductList = () => {
                 <>
                   <strong>{product.Nombre}</strong> - {product.Cantidad} unidades
                   <button onClick={() => handleEdit(product)}>✏️ Editar</button>
-                  <button onClick={() => handleDelete(product.id)}>❌ Eliminar</button>
+                  <button onClick={() => handleDelete(product.id, product.Nombre)}>❌ Eliminar</button>
                 </>
               )}
             </li>

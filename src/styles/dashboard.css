@@ -195,3 +195,23 @@
     margin-top: 5px;
   }
 }
+
+/* Botón para abrir el historial */
+.btn-historial {
+  width: 100%;
+  background-color: #17a2b8; /* Azul turquesa */
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 15px 0;
+  text-align: center;
+  transition: background 0.3s ease-in-out;
+}
+
+.btn-historial:hover {
+  background-color: #138496; /* Oscurece el color al pasar el mouse */
+}
+
