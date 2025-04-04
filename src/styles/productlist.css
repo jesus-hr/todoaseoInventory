@@ -17,4 +17,28 @@
     font-size: 14px;
     color: #555;
   }
+
+  .product-list button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .product-list .editar,
+  .product-list .eliminar{
+    padding: 8px 12px;
+    background-color: #b3b9bf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .product-list button:hover {
+    background-color: #0056b3;
+  }
+  
   

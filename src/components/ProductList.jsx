@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { registrarMovimiento } from "../movimientos"; // Importamos la función
+import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import "../styles/productlist.css";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -70,9 +72,40 @@ const ProductList = () => {
     setEditingProduct(null);
   };
 
+  // 📤 Exportar a CSV
+  const handleExportCSV = () => {
+    const csv = Papa.unparse(products.map(p => ({
+      Nombre: p.Nombre,
+      Cantidad: p.Cantidad
+    })));
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.setAttribute("download", "productos.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // 📊 Exportar a Excel
+  const handleExportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(products.map(p => ({
+      Nombre: p.Nombre,
+      Cantidad: p.Cantidad
+    })));
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
+
+    XLSX.writeFile(workbook, "productos.xlsx");
+  };
+
   // Filtrar productos
   const filteredProducts = products
-    .filter((product) => 
+    .filter((product) =>
       product.Nombre.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter((product) => {
@@ -109,6 +142,12 @@ const ProductList = () => {
         </select>
       </div>
 
+      <div style={{ marginBottom: "15px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <button onClick={handleExportCSV}>📤 Exportar CSV</button>
+        <button onClick={handleExportExcel}>📊 Exportar Excel</button>
+      </div>
+
+
       {/* Lista de productos */}
       {filteredProducts.length === 0 ? (
         <p>No hay productos que coincidan...</p>
@@ -133,8 +172,8 @@ const ProductList = () => {
               ) : (
                 <>
                   <strong>{product.Nombre}</strong> - {product.Cantidad} unidades
-                  <button onClick={() => handleEdit(product)}>✏️ Editar</button>
-                  <button onClick={() => handleDelete(product.id, product.Nombre)}>❌ Eliminar</button>
+                  <button className="editar" onClick={() => handleEdit(product)}>✏️ Editar</button>
+                  <button className="eliminar" onClick={() => handleDelete(product.id, product.Nombre)}>❌ Eliminar</button>
                 </>
               )}
             </li>
